@@ -1,3 +1,38 @@
+//use control flow- most specified version should be up top, second most specified version will be next
+var stringifyJSON = function (obj) {
+	if(Array.isArray(obj)){
+		//account for nested arrays by recursing
+		var results = [];
+		for(var i = 0; i < obj.length; i++){
+			results.push(stringifyJSON(obj[i]));
+		}
+		return '[' + results.join(',') + ']';
+	}
+	//to manage objects -- use the && operator to manage for null(typeof null is equal to an object)
+	if(obj && typeof obj === 'object'){
+		//use a results for an array 
+		results = [];
+		//loop thru the object and stringify the key and the value
+		for(var key in obj){
+			//to deal with unstringifiable values, use the continue to keep iterating and skip over the values
+			if(key === 'undefined' || typeof obj[key] === 'function'){
+				continue;
+			}
+			results.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]))
+		}
+		return '{' + results.join(',') + '}'
+	}
+	//to manage strings and to manage numbers because of type coercion
+	if(typeof obj === 'string'){
+		return '"' + obj+ '"'
+	}
+	return '' + obj;
+}
+
+
+
+
+
 // this is what you would do if you liked things to be easy:
 // var stringifyJSON = JSON.stringify;
 
@@ -127,39 +162,39 @@
 
 // };
 
-
-var stringifyJSON = function (obj) {
-   /*to be used for arrays*/
-   if( Array.isArray(obj) ){
-   		var results = [];
-   		//stringify each item in teh array;
-   		for(var i = 0; i < obj.length; i++){
-   			results.push(stringifyJSON(obj[i]));
-   		}
-   		//once done recursing, concatenate all items in array on teh comma
-   		return '[' + results.join(',') + ']';
-   }
-   // /*to be used for objects*/
-   if( obj && typeof obj === 'object' ){
-     var results = [];
-     //loop thru each key value pair int he object.
-     for(var key in obj){
-     	//for undefineable values. if they obj[key] or the typeof the obj[key] is a function, 
-      	if( obj[key] === undefined || typeof (obj[key]) === 'function' ){
-     		continue;
-     	}
-     	results.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]));
-     }
-     return '{' + results.join(',') + '}';
-   }
-   /*to be used for strings, numbers and boolean values by utilizing string concatenation*/
-   if(typeof obj === 'string'){
-        return '"' + obj  + '"'
-    } 
-    	return '' + obj;
+// /*stringify JSON with no helper functions in proper order*/
+// var stringifyJSON = function (obj) {
+//    /*to be used for arrays*/
+//    if( Array.isArray(obj) ){
+//    		var results = [];
+//    		//stringify each item in teh array;
+//    		for(var i = 0; i < obj.length; i++){
+//    			results.push(stringifyJSON(obj[i]));
+//    		}
+//    		//once done recursing, concatenate all items in array on teh comma
+//    		return '[' + results.join(',') + ']';
+//    }
+//    // /*to be used for objects*/
+//    if( obj && typeof obj === 'object' ){
+//      var results = [];
+//      //loop thru each key value pair int he object.
+//      for(var key in obj){
+//      	//for undefineable values. if they obj[key] or the typeof the obj[key] is a function, 
+//       	if( obj[key] === undefined || typeof (obj[key]) === 'function' ){
+//      		continue;
+//      	}
+//      	results.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]));
+//      }
+//      return '{' + results.join(',') + '}';
+//    }
+//    /*to be used for strings, numbers and boolean values by utilizing string concatenation*/
+//    if(typeof obj === 'string'){
+//         return '"' + obj  + '"'
+//     } 
+//     	return '' + obj;
     
 
-}
+// }
 
 //has two arguments refered to as filter or replacer
 //can be used to modify data passed to it

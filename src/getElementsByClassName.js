@@ -1,41 +1,47 @@
-// If life was easy, we could just do things the easy way:
-// var getElementsByClassName = function (className) {
-//   return document.getElementsByClassName(className);
-// };
+var getElementsByClassName = function (className, node) {
+    var nodes = [];
+    //starting node
+    var node = node || document.body;
+    //turn to an array first- there could be multiple names 
+    var parts = node.className.split(' ')
 
-// But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className, parentNode, results) {
-    results = results || [];
-    parentNode = parentNode || document.body
-
-    //if it contains class name push parentNode to results array
-    if (parentNode.classList.contains(className))
-        results.push(parentNode);
-
-    //recursion
-    for (var i = 0; i < parentNode.children.length; i++) {
-        results.concat(getElementsByClassName(className, parentNode.children[i], results))
+    if(parts.includes(className)){
+        nodes.push(node);
     }
-    return results;
-};
+    //loop thru the parentNodeschildren
+    //console.log(node)
+    // console.log(node.children, 'CHILDCHILDCHILD')
+    for(var i = 0; i < node.children.length; i++){
+        //results will be an array
+        var results = getElementsByClassName(className, node.children[i])
+        nodes = nodes.concat(results);
+    }
+    return nodes;
+}
 
-// You should use document.body, element.childNodes, and element.classList
-//https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementsByClassName
 
-//didn't use element.childNodes. did not recognize it
+/*
+PseudoCode
+Input => node
+Output => array with all correct classnames
 
-/*PSEUDOCODE
-// check if the node we are on contains the className
-//if so push to array
-//now we have an array with a node with the correct className
-//loop thru its children. suppose to be childNodes but children gives all elements
-//rather than ALL nodes. doesn't work in browser for some reason
-//this is where recursion happens. 
-		//call getElementsByClassName once again on each child of the parentNode
-		//each one will have its own execution context
-		//if it contains the right class it'll be pusehd to array
-		//if not it will skip over it
-		//as it goes upt the stack it will concat with the results array previously made
-
+starting node => document.body that woudld be parent
+//loop through all nodes using for loop
+//if node has target classname
+//concat with nodes array
 
 */
+
+/*
+<body>
+<div class='targetClassName'></div>
+<div>
+    <div class='targetClassName'>
+        <div class='targetClassName'>
+        
+        </div>
+    </div>
+    <p class='targetClassName'>
+</div>
+<div class='targetClassName'></div>
+<div class='dontfindthisClassName'></div>*/
